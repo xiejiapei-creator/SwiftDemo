@@ -1,8 +1,8 @@
 # SwiftDemo对应的简书文章
 
-CategoryNSDemo：[IOS基础：常用的Foundation分类方法](https://www.jianshu.com/p/68071b1bfe11)
+- CategoryNSDemo：[IOS基础：常用的Foundation分类方法](https://www.jianshu.com/p/68071b1bfe11)
 
-CategoryUIDemo：[IOS基础：常用的UIKit分类方法](https://www.jianshu.com/p/bf032002dc20)
+- CategoryUIDemo：[IOS基础：常用的UIKit分类方法](https://www.jianshu.com/p/bf032002dc20)
 
 FunctionCode：[IOS基础：常用的功能块](https://www.jianshu.com/p/a70f1eadabd5)
 
