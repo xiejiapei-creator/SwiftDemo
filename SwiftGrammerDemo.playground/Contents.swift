@@ -490,8 +490,196 @@ case .gasoline:
 
 print(policyNote ?? "暂无说明")
 
+// 可选类型 Optional
 policyNote = nil
 policyNote = Optional.none // 等同于 nil
+
+// 声明为整型
+enum Season: Int
+{
+    case Spring = 0
+    case Summer = 1
+    case Autumn = 2
+    case Winter = 3
+}
+let season = Season.Spring
+print(season)
+print(season.rawValue)
+
+// 声明为字符串类型
+enum House: String
+{
+    case XieJiapei = "I am XieJiapei"
+    case FanYiYun = "I am FanYiYun"
+}
+let jiapei = House.XieJiapei
+print(jiapei.rawValue)
+
+enum CompassPoint: String
+{
+    case North, South, East, West
+}
+let north = CompassPoint.North
+print(north.rawValue)
+
+let south = CompassPoint(rawValue: "South")!;
+print(south.rawValue)
+
+// 声明为浮点类型
+enum Constants: Double
+{
+    case π = 3.14159
+    case e = 2.71828
+    case φ = 1.61803398874
+    case λ = 1.30357
+}
+let pai = Constants.π
+print(pai)
+print(pai.rawValue)
+
+// enum包含enum
+enum Character
+{
+    enum Weapon
+    {
+        case Bow
+        case Sword
+        case Lance
+        case Dagger
+    }
+
+    enum Helmet
+    {
+        case Wooden
+        case Iron
+        case Diamond
+    }
+
+    case Thief
+    case Warrior
+    case Knight
+}
+
+let thief = Character.Thief
+let bow = Character.Weapon.Bow
+let iron = Character.Helmet.Iron
+
+print(thief)
+print(bow)
+print(iron)
+
+// 结构体里面嵌套枚举
+struct CharacterStruct
+{
+    enum CharacterType
+    {
+        case Thief
+        case Warrior
+        case Knight
+    }
+
+    enum Weapon
+    {
+        case Bow
+        case Sword
+        case Lance
+        case Dagger
+    }
+
+    let type: CharacterType
+    let weapon: Weapon
+}
+
+let characterStruct = CharacterStruct(type: .Thief, weapon: .Bow)
+print(characterStruct.type)
+print(characterStruct.weapon)
+
+// 值关联
+enum Trade
+{
+    case Buy(stock: String, amount: Int)
+    case Sell(stock: String, amount: Int)
+}
+
+let trade = Trade.Buy(stock: "Lucky Coffee", amount: 100)
+if case let Trade.Buy(stock, amount) = trade
+{
+    print("buy \(amount) of \(stock)")
+}
+
+enum TradeNoTip
+{
+    case Buy(String, Int)
+    case Sell(String, Int)
+}
+
+let tradeNoTip = TradeNoTip.Buy("Tesla Car", 1)
+if case let TradeNoTip.Buy(stock, amount) = tradeNoTip
+{
+    print("buy \(amount) of \(stock)")
+}
+
+// 枚举中的函数
+enum Wearable
+{
+    enum Weight: Int
+    {
+        case Light = 2
+    }
+
+    enum Armor: Int
+    {
+        case Light = 4
+    }
+
+    case Helmet(weight: Weight, armor: Armor)
+
+    func attributes() -> (weight: Int, armor: Int)
+    {
+        switch self
+        {
+        case .Helmet(let w, let a):
+            return (weight: w.rawValue * 2, armor: a.rawValue * 4)
+        }
+    }
+}
+
+let wearable = Wearable.Helmet(weight: .Light, armor: .Light).attributes()
+print(wearable)
+
+enum Device
+{
+    case iPad, iPhone, AppleTV, AppleWatch
+    func introduced() -> String
+    {
+        switch self
+        {
+        case .AppleTV: return "\(self) was introduced 2006"
+        case .iPhone: return "\(self) was introduced 2007"
+        case .iPad: return "\(self) was introduced 2010"
+        case .AppleWatch: return "\(self) was introduced 2014"
+        }
+    }
+}
+print (Device.iPhone.introduced())
+
+// 枚举中的属性
+enum AnotherDevice
+{
+    case iPad, iPhone
+    var year: Int
+    {
+        switch self
+        {
+        case .iPad:
+            return 2010
+        case .iPhone:
+            return 2007
+        }
+    }
+}
+let iPhone = AnotherDevice.iPhone
+print(iPhone.year)
 
 //===============类 Class==============
 
@@ -750,3 +938,52 @@ else
 
 // try! 写法，运行函数，但彻底忽视错误
 try! validatePassword(password)
+
+//===========运算符重载===============
+// contains方法
+let students = ["Nora", "Fern", "Ryan", "Rainer"]
+let nameToCheck = "Ryan"
+
+if students.contains(nameToCheck)
+{
+    print("\(nameToCheck) is signed up!")
+}
+else
+{
+    print("No record of \(nameToCheck).")
+}
+
+// 把==声明成为自定义类型的静态方法
+struct StreetAddress
+{
+       let number: String
+       let street: String
+       let unit: String?
+
+       init(_ number: String, _ street: String, unit: String? = nil)
+       {
+           self.number = number
+           self.street = street
+           self.unit = unit
+       }
+}
+
+
+extension StreetAddress: Equatable
+{
+    static func == (lhs: StreetAddress, rhs: StreetAddress) -> Bool
+    {
+        return
+            lhs.number == rhs.number &&
+            lhs.street == rhs.street &&
+            lhs.unit == rhs.unit
+    }
+}
+
+let addresses = [StreetAddress("1490", "Grove Street"),
+                 StreetAddress("2119", "Maple Avenue"),
+                 StreetAddress("1400", "16th Street")]
+let home = StreetAddress("1400", "16th Street")
+
+print("你在这条街道上看见我的家了吗？\(addresses[0] == home)")
+print("你在这条街道上看见我的家了吗？\(addresses.contains(home))")
